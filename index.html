@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <style>
+			.flex-container {
+				height: 99%;
+				width: 99%;
+				display: flex;
+				border: 5px solid #aaaaaa;
+				padding: 2px;
+			}
+
+			.flex-child {
+					flex: 1;
+					border: 2px solid white;
+					overflow: scroll;
+			}  
+
+			.flex-child:first-child {
+					margin-right: 2px;
+			}
+
+			ul {
+				width: auto;
+				max-width: 95%; //350px;
+				height: auto;
+				max-height: 50%;
+				min-height: 20px;
+				padding: 5px;
+				padding-left: 18px;
+				border: 1px solid #aaaaaa;
+				overflow: scroll;
+			}
+
+			ul#Songs {
+				max-width: 95%; //350px;
+				width: 95%;
+				margin-top: 5px;
+				max-height: 93%;
+				height: 93%;
+				padding: 5px;
+				padding-left: 18px;
+				border: 1px solid #aaaaaa;
+				overflow: scroll;
+			}
+
+			.dragging {
+				background-color: #eee;
+			}
+
+			#searchInput {
+				width: 91%;
+				padding-top: 5px;
+				border: 1px solid #ddd;
+			}
+    </style>
+  </head>
+  <body>
+		<div class="flex-container">
+			<div class="flex-child">
+				<span>
+					<b>Songs</b>&nbsp&nbsp
+					<input type="text" id="searchInput" placeholder="Loading">
+				</span>
+				<ul id="Songs"></ul>
+			</div>
+			<div class="flex-child">
+				<span id="plSpan" hidden>
+					<b>Playlists</b>&nbsp&nbsp&nbsp&nbsp
+					<button id="newPlBtn">New playlist</button>&nbsp&nbsp
+					<button id="cancelPlBtn" hidden>Cancel</button>&nbsp&nbsp
+					<input id="newPlName" placeholder="Enter playlist name" hidden>
+					<button id="savePlBtn" hidden>Save changes</button>
+				</span>
+				</br></br>
+				<div id="Playlists"></div>
+			</div>
+		</div>
+  </body>
+	<script type="module">
+		import {addSongs, addPlaylists, newPlaylist, savePlaylists} from './songs3.mjs';
+
+		var playlists = [];
+
+		document.querySelector('#searchInput').addEventListener('keyup', function() {
+			for (const li of document.getElementById("Songs").getElementsByTagName("li")) {
+				li.hidden = li.innerText.includes(document.getElementById("searchInput").value) ? false : true;
+			}
+		});
+
+		document.querySelector('#newPlBtn').addEventListener('click', function(){
+			document.querySelector('#newPlBtn').hidden = true;
+			document.querySelector('#newPlName').hidden = false;
+			document.querySelector('#cancelPlBtn').hidden = false;
+		});
+
+		document.querySelector('#cancelPlBtn').addEventListener('click', function() {
+			document.querySelector('#newPlName').hidden = true;
+			document.querySelector('#cancelPlBtn').hidden = true;
+			document.querySelector('#newPlBtn').hidden = false;
+		});
+
+		document.querySelector('#newPlName').addEventListener("keyup", function(event) {
+			if (event.keyCode === 13) {
+				event.preventDefault();
+				newPlaylist(document.querySelector('#newPlName').value);
+				document.querySelector('#savePlBtn').hidden = false;
+				document.querySelector('#newPlName').hidden = true;
+				document.querySelector('#newPlBtn').hidden = false;
+				document.querySelector('#cancelPlBtn').hidden = true;
+			}
+		});
+
+		document.querySelector('#savePlBtn').addEventListener('click', savePlaylists);
+
+		const loaderArray = ['Loading', 'Loading .','Loading  .', 'Loading   .'];
+		let idx = 1;
+		const interval = setInterval(
+			() => {
+				document.querySelector('#searchInput').placeholder = loaderArray[idx];
+				idx = idx < 3 ? idx+1 : 0;
+			}, 500
+		);
+
+		(async function(){
+			await addSongs(document.querySelector('#Songs'));
+			await addPlaylists(document.querySelector('#Playlists'));
+			clearInterval(interval);
+			document.querySelector('#plSpan').hidden = false;
+			document.querySelector('#searchInput').placeholder="Search for songs..."
+		})();
+	</script>
+</html>
