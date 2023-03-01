@@ -1,6 +1,7 @@
 export {addSongs, addPlaylists, newPlaylist, savePlaylists};
 import {allowDrop, dragStart, dragOver, olDrop} from './dragdrop.mjs';
 
+const href = 'http://forked-daapd.local:3689/';
 const liAttrs = {draggable: true};
 let playlists = [];
 
@@ -108,9 +109,8 @@ function savePlaylists() {
 
 function curl(cmd, method='GET', headers={}, body='') {
 	return new Promise((resolve, reject) => {
-		let href = `http://forked-daapd.local:3689/${cmd}`;
 		const http = new XMLHttpRequest();
-		http.open(method, href);
+		http.open(method, `${href}${cmd}`);
 		http.send();
 		http.onreadystatechange = function() {
 			if(this.readyState === 4) {
