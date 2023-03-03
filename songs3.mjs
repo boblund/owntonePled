@@ -69,6 +69,7 @@ function newPlaylistEntry(playlist){
 	ul.addEventListener('drop', olDrop);
 	ul.addEventListener('dragover', allowDrop);
 	ul.setAttribute('changed', 'no');
+	ul.classList.add('playlist');
 	details.append(ul);
 	if(playlist.tracks) {
 		playlist.tracks.forEach((entry) => {

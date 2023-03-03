@@ -1,37 +1,49 @@
 <html>
   <head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
+			body {
+				border: 2px solid #ccc;
+			}
+
 			.flex-container {
-				height: 99%;
+				height:99%;
 				width: 99%;
 				display: flex;
-				border: 5px solid #aaaaaa;
-				padding: 2px;
 			}
 
 			.flex-child {
 					flex: 1;
-					border: 2px solid white;
+					margin-top: 0.75%;
+				margin-left: 1%;
+				margin-bottom: 0.2%;
+				padding-top: 1%;
+				padding-left: 1%;
+					border: 1px solid #ccc;
 					overflow: scroll;
 			}  
 
-			.flex-child:first-child {
-					margin-right: 2px;
-			}
+			/*.flex-child:first-child {
+				border: 1px solid #ccc;
+				overflow: scroll;
+			}*/
 
 			ul {
-				width: auto;
-				max-width: 95%; //350px;
+				padding: 0.75%;
+			}
+
+			.playlist {
 				height: auto;
+				width: 95%;
 				max-height: 50%;
 				min-height: 20px;
-				padding: 5px;
-				padding-left: 18px;
-				border: 1px solid #aaaaaa;
+				border-top: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				padding-left: 2.7%;
 				overflow: scroll;
 			}
 
-			ul#Songs {
+			/*ul#Songs {
 				max-width: 95%; //350px;
 				width: 95%;
 				margin-top: 5px;
@@ -41,7 +53,7 @@
 				padding-left: 18px;
 				border: 1px solid #aaaaaa;
 				overflow: scroll;
-			}
+			}*/
 
 			.dragging {
 				background-color: #eee;
@@ -122,11 +134,15 @@
 		);
 
 		(async function(){
-			await addSongs(document.querySelector('#Songs'));
-			await addPlaylists(document.querySelector('#Playlists'));
-			clearInterval(interval);
-			document.querySelector('#plSpan').hidden = false;
-			document.querySelector('#searchInput').placeholder="Search for songs..."
+			try {
+				await addSongs(document.querySelector('#Songs'));
+				await addPlaylists(document.querySelector('#Playlists'));
+				clearInterval(interval);
+				document.querySelector('#plSpan').hidden = false;
+				document.querySelector('#searchInput').placeholder="Search for songs..."
+			} catch (e) {
+				console.error(`error: ${JSON.stringify(e, null, 2)}`);
+			}
 		})();
 	</script>
 </html>
