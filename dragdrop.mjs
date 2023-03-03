@@ -34,8 +34,8 @@ function dragOver(e) {
 function olDrop(ev) {
 	_dragStartEl.classList.remove('dragging');
 	(ev.target.nodeName === 'LI' ? ev.target.parentNode : ev.target).setAttribute('changed', 'yes');
-	if(ev.target === _dragStartEl) return;
 	document.querySelector('#savePlBtn').hidden = false;
+	if(ev.target === _dragStartEl) return;
 	const target = ev.target.nodeName === 'LI' ? ev.target.parentNode : ev.target;
 	if(ev.dataTransfer.effectAllowed === 'copy') {
 		_dragStartEl= _dragStartEl.cloneNode(true);
