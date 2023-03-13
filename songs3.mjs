@@ -1,19 +1,19 @@
 export {addSongs, addPlaylists, newPlaylist, savePlaylists};
 import {allowDrop, dragStart, dragOver, olDrop} from './dragdrop.mjs';
 
-const href = 'http://forked-daapd.local:3689/';
+const forkedDappd = 'http://forked-daapd.local:3689/';
 const liAttrs = {draggable: true};
 let playlists = [];
 
 async function addSongs(songsElement) {
 	let songs = [],
-		artists = JSON.parse(await curl(`api/library/artists`)).items
+		artists = JSON.parse(await curl(`${forkedDappd}api/library/artists`)).items
 			.map(e => {const {name, id} = e; return {name, id};})
 			.sort((a,b) => a.name > b.name ? 1 : -1);
 
 	for(const artist of artists) {
-		for(const album of JSON.parse(await curl(`api/library/artists/${artist.id}/albums`)).items.sort((a,b) => a.name > b.name ? 1 : -1)) {
-			JSON.parse(await curl(`api/library/albums/${album.id}/tracks`)).items.forEach(track => {
+		for(const album of JSON.parse(await curl(`${forkedDappd}api/library/artists/${artist.id}/albums`)).items.sort((a,b) => a.name > b.name ? 1 : -1)) {
+			JSON.parse(await curl(`${forkedDappd}api/library/albums/${album.id}/tracks`)).items.forEach(track => {
 				songs.push({
 					trackName: `${track.artist}/${track.album}/${track.title}`,
 					trackPath: track.path
@@ -28,12 +28,12 @@ async function addSongs(songsElement) {
 }
 
 async function addPlaylists(playlistsElement) {
-	playlists = JSON.parse(await curl(`api/library/playlists`)).items
+	playlists = JSON.parse(await curl(`${forkedDappd}api/library/playlists`)).items
 		.map(e => {const {name, id} = e; return {name, id, tracks: []};})
 		.sort((a,b) => a.name > b.name ? 1 : -1);
 
 	for(const playlist of playlists) {
-		JSON.parse(await curl(`api/library/playlists/${playlist.id}/tracks`)).items.forEach(track => {
+		JSON.parse(await curl(`${forkedDappd}api/library/playlists/${playlist.id}/tracks`)).items.forEach(track => {
 			playlist.tracks.push({
 				trackName: `${track.artist}/${track.album}/${track.title}`,
 				trackPath: track.path
@@ -111,7 +111,7 @@ function savePlaylists() {
 function curl(cmd, method='GET', headers={}, body='') {
 	return new Promise((resolve, reject) => {
 		const http = new XMLHttpRequest();
-		http.open(method, `${href}${cmd}`);
+		http.open(method, cmd);
 		http.send();
 		http.onreadystatechange = function() {
 			if(this.readyState === 4) {
